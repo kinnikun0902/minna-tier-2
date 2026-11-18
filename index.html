@@ -214,13 +214,6 @@ const params=new URLSearchParams(location.search);
 const GID=(params.get("g")||"").replace(/[^a-zA-Z0-9_-]/g,"").slice(0,40);
 const TEST=params.get("test")==="1"; // 動作確認用：別人として参加
 function roomUrl(id){const u=new URL(location.href);u.search="?g="+id;u.hash="";return u.toString()}
-if(!GID){
-  $("#landing").hidden=false;
-  $("#create").onclick=()=>{location.href=roomUrl(uid())};
-  $("#joinForm").onsubmit=e=>{e.preventDefault();let v=$("#joinId").value.trim();try{const u=new URL(v);v=u.searchParams.get("g")||v}catch{}v=v.replace(/[^a-zA-Z0-9_-]/g,"");if(v)location.href=roomUrl(v)};
-}else{
-  $("#app").hidden=false;start();
-}
 
 /* ---------- ダイアログ ---------- */
 function openSheet(build){const s=$("#sheet");s.textContent="";build(s);$("#ov").hidden=false}
@@ -548,6 +541,15 @@ onAuthStateChanged(auth,async u=>{
   if(myName)join();
   else textSheet("あなたの名前","","参加する",v=>{myName=v;if(!TEST)ls.set("tiergame.name",v);join()},{lead:"ほかの参加者に表示される名前です。",noCancel:true});
 });
+}
+
+/* ---------- 起動 ---------- */
+if(!GID){
+  $("#landing").hidden=false;
+  $("#create").onclick=()=>{location.href=roomUrl(uid())};
+  $("#joinForm").onsubmit=e=>{e.preventDefault();let v=$("#joinId").value.trim();try{const u=new URL(v);v=u.searchParams.get("g")||v}catch{}v=v.replace(/[^a-zA-Z0-9_-]/g,"");if(v)location.href=roomUrl(v)};
+}else{
+  $("#app").hidden=false;start();
 }
 </script>
 </body>
