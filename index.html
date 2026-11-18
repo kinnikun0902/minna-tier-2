@@ -327,7 +327,7 @@ function renderPlayers(){
 }
 
 /* ---------- 画面の描き分け ---------- */
-function keyNow(){if(!G)return "loading";return [G.phase,G.round,G.parentUid===me,G.phase==="reveal"&&rounds.has(G.round)].join("|")}
+function keyNow(){if(!G)return "loading";return [G.phase,G.round,G.parentUid,G.phase==="reveal"&&rounds.has(G.round),sortedPlayers().map(([u,p])=>u+":"+p.name).join(",")].join("|")}
 function render(){
   renderPlayers();
   if(drag)return;
