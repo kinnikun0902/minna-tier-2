@@ -181,7 +181,7 @@ const firebaseConfig = {
   appId: "1:884081824428:web:7ecf1361e085fac8f98509"
 };
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, signInAnonymously, onAuthStateChanged, setPersistence, inMemoryPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, collection, setDoc, updateDoc, getDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /* ---------- お題とワードの素材 ---------- */
@@ -291,7 +291,7 @@ function scoreGuess(answer,guess){
 }
 
 function start(){
-const fb=initializeApp(firebaseConfig);
+const fb=TEST?initializeApp(firebaseConfig,"test-"+uid()):initializeApp(firebaseConfig);
 const auth=getAuth(fb);const db=getFirestore(fb);
 const gRef=doc(db,"games",GID);
 let G=null;const players=new Map();const rounds=new Map();
@@ -523,7 +523,7 @@ $("#invite").onclick=async()=>{const url=roomUrl(GID);
 $("#rename").onclick=()=>textSheet("あなたの名前",myName,"変更する",v=>{myName=v;if(!TEST)ls.set("tiergame.name",v);if(me)setDoc(doc(db,"games",GID,"players",me),{name:v},{merge:true}).catch(err)});
 
 render();setStatus("接続中…");
-(TEST?setPersistence(auth,inMemoryPersistence):Promise.resolve()).then(()=>signInAnonymously(auth)).catch(e=>{console.error(e);setStatus("サーバーに接続できませんでした。通信状況を確認してください。",true)});
+signInAnonymously(auth).catch(e=>{console.error(e);setStatus("サーバーに接続できませんでした。通信状況を確認してください。",true)});
 let started=false;
 onAuthStateChanged(auth,async u=>{
   if(!u||started)return;started=true;me=u.uid;
